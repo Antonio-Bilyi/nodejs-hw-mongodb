@@ -25,6 +25,10 @@ export default function setupServer() {
 
     app.use(pinoHttp({ logger }));
 
+    app.get("/", (req, res) => {
+        res.status(200).json({ message: "API is running" });
+    });
+
     app.get("/contacts", async (req, res) => {
         const contacts = await getAllContacts();
         
