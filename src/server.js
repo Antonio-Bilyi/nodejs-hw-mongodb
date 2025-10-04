@@ -3,9 +3,10 @@ import cors from "cors";
 import pino from "pino";
 import pinoHttp from "pino-http";
 import getEnvVar from "./utils/getEnvVar.js";
-import router from "./routers/contacts.js";
-import errorHandler from "./middlewares/errorHandler.js"
-import notFoundHandler from "./middlewares/notFoundHandler.js"
+import router from "./routers/index.js";
+import errorHandler from "./middlewares/errorHandler.js";
+import notFoundHandler from "./middlewares/notFoundHandler.js";
+import cookieParser from "cookie-parser";
 
 const PORT = Number(getEnvVar("PORT") || 8080);
 
@@ -14,10 +15,10 @@ export default function setupServer() {
 
     app.use(express.json());
     
-    //CORS SETTINGS//
     app.use(cors());
+
+    app.use(cookieParser());
     
-    //PINO SETTINGS//
     const logger = pino({
         transport: {
             target: "pino-pretty",
