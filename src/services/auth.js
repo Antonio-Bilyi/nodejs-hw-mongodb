@@ -76,6 +76,5 @@ export async function refreshUserSession({sessionId, refreshToken}) {
 };
 
 export async function logoutUser(sessionId) {
-    await SessionModel.deleteOne({ _id: sessionId });
-    
-}
+    await SessionModel.deleteOne({ _id: sessionId });  
+};

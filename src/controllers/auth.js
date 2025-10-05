@@ -61,8 +61,8 @@ export async function refreshUserSessionController(req, res) {
 };
 
 export async function logoutUserController(req, res) {
-    if (req.cookie.sessionId) {
-        await logoutUser(req.cookie.sessionId);
+    if (req.cookies.sessionId) {
+        await logoutUser(req.cookies.sessionId);
     }
 
     res.clearCookie("sessionId");
