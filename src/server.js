@@ -7,6 +7,7 @@ import router from "./routers/index.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
 import cookieParser from "cookie-parser";
+import path from "node:path";
 
 const PORT = Number(getEnvVar("PORT") || 8080);
 
@@ -31,6 +32,8 @@ export default function setupServer() {
     app.get("/", (req, res) => {
         res.status(200).json({ message: "API is running" });
     });
+
+    app.use("/avatars", express.static(path.resolve("src", "uploads", "avatars")));
 
     app.use(router);
 

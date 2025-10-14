@@ -1,9 +1,18 @@
+import * as fs from "node:fs";
+import path from "node:path";
 import { UserModel } from "../db/models/user.js";
 import { SessionModel } from "../db/models/session.js"
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import { randomBytes } from "crypto";
 import { FIFTEEN_MINUTES, THIRTY_DAY } from "../constants/index.js";
+import jwt from "jsonwebtoken";
+import getEnvVar from "../utils/getEnvVar.js"
+import Handlebars from "handlebars"; 
+import { sendMail } from "../utils/sendMail.js";
+
+
+const SEND_RESET_EMAIL_TEMPLATE = fs.readFileSync(path.resolve("src/templates/send-reset-email.html"), { encoding: "UTF-8" });
 
 export async function registerUser(payload) {
     const user = await UserModel.findOne({ email: payload.email });
@@ -78,3 +87,51 @@ export async function refreshUserSession({sessionId, refreshToken}) {
 export async function logoutUser(sessionId) {
     await SessionModel.deleteOne({ _id: sessionId });  
 };
+
+export async function sendResetPassword(email) {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+        throw (createHttpError(404, "User not found"));
+    }
+
+    const token = jwt.sign({ sub: user._id }, getEnvVar("JWT_SECRET"), {
+        expiresIn: "5m",
+    });
+    
+    const template = Handlebars.compile(SEND_RESET_EMAIL_TEMPLATE);
+
+    try {
+
+    await sendMail({
+        to: email,
+        subject: "Reset password instruction",
+        html: template({ resetPasswordLink: `${getEnvVar("APP_DOMAIN")}/reset-password?token=${token}`}),
+    });
+    } catch (error) {
+       throw (createHttpError(500, "Failed to send the email, please try again later.")); 
+    }  
+};
+
+export async function resetPassword(token, password) {
+    try {
+        const decoded = jwt.verify(token, getEnvVar("JWT_SECRET"));
+
+        const user = UserModel.findById(decoded.sub);
+        if (!user) {
+            throw createHttpError(404, "User not found");
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await UserModel.findByIdAndUpdate(decoded.sub, { password: hashedPassword });
+
+        await SessionModel.deleteMany({ userId: user._id });
+    } catch (error) {
+        if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+            throw (createHttpError(401, "Token is expired or invalid."));
+        }
+        
+        throw error;
+    }
+};
+

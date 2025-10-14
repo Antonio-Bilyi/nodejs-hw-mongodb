@@ -22,6 +22,11 @@ const contactSchema = mongoose.Schema({
         required: true,
         default: "personal",
     },
+    avatar: {
+        type: String,
+        required: false,
+        default: null,
+    },
     userId: {
         type: Schema.Types.ObjectId,
         ref: "users",
