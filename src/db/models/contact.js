@@ -22,7 +22,7 @@ const contactSchema = mongoose.Schema({
         required: true,
         default: "personal",
     },
-    avatar: {
+    photo: {
         type: String,
         required: false,
         default: null,

@@ -1,5 +1,4 @@
 import path from "node:path";
-import * as fs from "node:fs/promises";
 import multer from "multer";
 
 const storage = multer.diskStorage({

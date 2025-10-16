@@ -45,27 +45,24 @@ export async function  getContactByIdController(req, res, next) {
 };
 
 export async function createContactController(req, res) {
-    let avatar;
-
-    
+    let photo;
 
     if (getEnvVar ("UPLOAD_CLOUDINARY") === "true") {
 
         const response = await uploadToCloudinary(req.file.path);
+        photo = response.secure_url;
         await fs.unlink(req.file.path);
-
-        avatar = response.secure_url;
     } else {
         await fs.rename(
             req.file.path,
-            path.resolve("src/uploads/avatars", req.file.filename)
+            path.resolve("src/uploads/photos", req.file.filename)
         );
-        avatar = `http://localhost:8080/avatars/${req.file.filename}`;
+        photo = `http://localhost:8080/photos/${req.file.filename}`;
     }
     
     const contact = await createContact({
         ...req.body,
-        avatar,
+        photo,
         userId: req.user._id,
     });
 
