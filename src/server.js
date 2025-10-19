@@ -8,8 +8,12 @@ import errorHandler from "./middlewares/errorHandler.js";
 import notFoundHandler from "./middlewares/notFoundHandler.js";
 import cookieParser from "cookie-parser";
 import path from "node:path";
+import swaggerUI from "swagger-ui-express";
+import * as fs from "node:fs";
 
 const PORT = Number(getEnvVar("PORT") || 8080);
+
+const SWAGGER_DOCUMENT = JSON.parse(fs.readFileSync(path.join("docs", "swagger.json")));
 
 export default function setupServer() {
     const app = express();
@@ -17,6 +21,8 @@ export default function setupServer() {
     app.use(express.json());
     
     app.use(cors());
+
+    app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(SWAGGER_DOCUMENT));
 
     app.use(cookieParser());
     
