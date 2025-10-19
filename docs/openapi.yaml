@@ -13,7 +13,7 @@ tags:
     description: Authorize operation
 servers:
   - url: http://localhost:8080
-  # - url: #посилання на задеплоєний сайт
+  - url: https://nodejs-hw7-swagger-ouxs.onrender.com
 paths:
   /contacts:
     get:
