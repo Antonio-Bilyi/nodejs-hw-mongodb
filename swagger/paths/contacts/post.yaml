@@ -24,11 +24,24 @@ requestBody:
             type: string
             description: Contact phone number
             example: +380924315679
+          email:
+            type: string
+            description: contact email
+            example: example@gmail.com
+          isFavourite:
+            type: boolean
+            description: Favourite contact
+            default: false
+            example: true
           contactType:
             type: string
-            description: Contact Type
             enum: ['work', 'home', 'personal']
             example: work
+          userId:
+            type: string
+            description: contact user id
+            example: 68e4ef325a8a80b61937bfc8
+
 responses:
   '201':
     description: Successfully created a contact
