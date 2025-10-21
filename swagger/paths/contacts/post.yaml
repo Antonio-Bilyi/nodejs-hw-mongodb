@@ -37,10 +37,6 @@ requestBody:
             type: string
             enum: ['work', 'home', 'personal']
             example: work
-          userId:
-            type: string
-            description: contact user id
-            example: 68e4ef325a8a80b61937bfc8
 
 responses:
   '201':
