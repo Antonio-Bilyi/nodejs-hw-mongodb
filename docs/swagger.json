@@ -209,11 +209,6 @@
                       "personal"
                     ],
                     "example": "work"
-                  },
-                  "userId": {
-                    "type": "string",
-                    "description": "contact user id",
-                    "example": "68e4ef325a8a80b61937bfc8"
                   }
                 }
               }
@@ -396,6 +391,7 @@
                   },
                   "photo": {
                     "type": "string",
+                    "format": "binary",
                     "description": "Contact photo",
                     "default": null,
                     "example": "https://res.cloudinary.com/ds5fvs6c4/image/upload/v1760626225/c0l9gqpkajzbsmfiaqpw.png"
@@ -842,6 +838,7 @@
           },
           "photo": {
             "type": "string",
+            "format": "binary",
             "description": "Contact photo",
             "default": null,
             "example": "https://res.cloudinary.com/ds5fvs6c4/image/upload/v1760626225/c0l9gqpkajzbsmfiaqpw.png"
